@@ -26,11 +26,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lowercase owner
+        id: owner
+        run: echo "name=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/kanban:latest
-            ghcr.io/${{ github.repository_owner }}/kanban:${{ github.sha }}
+            ghcr.io/${{ steps.owner.outputs.name }}/kanban:latest
+            ghcr.io/${{ steps.owner.outputs.name }}/kanban:${{ github.sha }}
